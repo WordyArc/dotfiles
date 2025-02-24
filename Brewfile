@@ -56,6 +56,7 @@ brew 'go'             # Compiler for Go Lang
 brew 'node'           # Node.js
 brew 'openjdk'        # Java development kit
 brew 'dotnet'         # .NET Core
+brew "rustup"         # Rust toolchain installer
 cask 'temurin'        # JDK from the Eclipse Foundation (Adoptium)
 
 # Development Utils
