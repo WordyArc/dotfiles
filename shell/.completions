@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+# `.completions` handles all custom auto-completions.
