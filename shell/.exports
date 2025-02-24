@@ -1,0 +1,74 @@
+#!/usr/bin/env zsh
+
+# `.exports` is used to provide custom variables.
+
+
+# === eval ===
+
+# Atuin
+eval "$(atuin init zsh --disable-up-arrow)"
+
+# brew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+
+# === Compiler flags ==="
+export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
+
+export PATH="$(brew --prefix)/opt/homebrew/opt/dart/libexec:${PATH}"
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+#export LANG=ru_RU.UTF-8
+#export LC_ALL=ru_RU.UTF-8
+
+
+# === Path modifications ===
+
+# These lines should be the first ones!
+
+# npm:
+PATH="/usr/local/share/npm/bin:$PATH"
+
+# rustup:
+PATH="/opt/homebrew/opt/rustup/bin:$PATH"
+
+# HomeBrew
+export PATH=/opt/homebrew/bin:$PATH
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
+# Flutter
+export PATH="$PATH:/Users/viktor/development/flutter/bin"
+
+
+# === Path Apps ===
+
+# Added by Toolbox App
+export PATH="$PATH:/Users/viktor/Library/Application Support/JetBrains/Toolbox/scripts"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/viktor/.lmstudio/bin"
+
+
+# === General ===
+
+# Editor:
+export EDITOR="$(which nano)"
+
+# Homebrew:
+export HOMEBREW_NO_ANALYTICS=1  # disables statistics that brew collects
+
+
+# === Version managers ===
+
+# rustup:
+source "$HOME/.cargo/env"
+
+
+# === PATH ===
+
+# This should be the last line:
+export PATH
