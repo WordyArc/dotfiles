@@ -37,3 +37,6 @@ catroll() {
         done
     fi
 }
+
+alias cls='printf "\033[3J\033[H\033[2J"' # "\e[3J\e[H\e[2J"
+
