@@ -1,5 +1,7 @@
 [[ -o interactive ]] || return
 
+source "$ZDOTDIR/bootstrap/homebrew.zsh"
+
 mkdir -p "$XDG_CACHE_HOME/zsh" "$XDG_STATE_HOME/zsh"
 
 _zsh_source() {
