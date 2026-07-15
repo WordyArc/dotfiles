@@ -1,1 +1,1 @@
-export DOTNET_ROOT=/opt/homebrew/opt/dotnet/libexec
+export DOTNET_ROOT="$HOMEBREW_PREFIX/opt/dotnet/libexec"
