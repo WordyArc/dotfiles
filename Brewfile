@@ -43,7 +43,6 @@ brew 'lazygit'      # Full Git management app
 brew "docker-clean" # Clean Docker containers, images, networks, and volumes
 
 # CLI External Sercvices
-brew 'navi'         # Browse, search, read cheat sheets
 brew 'zsh-autosuggestions'
 brew 'zsh-history-substring-search'
 brew 'zsh-syntax-highlighting'
@@ -62,24 +61,7 @@ brew 'go'             # Compiler for Go Lang
 brew 'node'           # Node.js
 brew 'openjdk'        # Java development kit
 brew 'dotnet'         # .NET Core
-brew "rustup"         # Rust toolchain installer
 
-# Development Utils
-brew 'tig'            # Text-mode interface for git
-
-# Network and Security Testing
-brew 'bettercap'      # Network, scanning and monitoring
-brew 'nmap'           # Port scanning
-
-# Security Utilities and Data Encryption
-brew 'git-crypt'      # Transparent encryption for git repos
-
-#############################################################
-# Desktop Applications                                      #
-#############################################################
-
-# Media
-brew 'pandoc'       # Universal file converter
 
 #############################################################
 # AppStore apps                                             #

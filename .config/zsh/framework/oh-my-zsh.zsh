@@ -6,4 +6,8 @@ ZSH_THEME=""
 HIST_STAMPS="yyyy-mm-dd"
 plugins=(git)
 
-source "$ZSH/oh-my-zsh.sh"
+if [[ -r "$ZSH/oh-my-zsh.sh" ]]; then
+  source "$ZSH/oh-my-zsh.sh"
+else
+  print -u2 "zsh: Oh My Zsh not found: $ZSH"
+fi
