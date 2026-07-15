@@ -24,8 +24,12 @@ brew 'git'          # Version controll
 brew 'atuin'        # Improved shell history for zsh, bash, fish and nushell
 brew 'bat'          # Output highlighting (better cat)
 brew 'cloc'         # Count lines of code
+brew 'direnv'       # Directory-specific environments
+brew 'neovim'       # Terminal text editor
+brew 'starship'     # Shell prompt
 brew 'tree'         # Directory listings as tree structure
 brew 'midnight-commander' # Terminal-based visual file manager
+brew 'zoxide'       # Smarter directory navigation
 
 # CLI Monitoring and Performance Apps
 brew 'ctop'         # Container metrics and monitoring
@@ -40,7 +44,9 @@ brew "docker-clean" # Clean Docker containers, images, networks, and volumes
 
 # CLI External Sercvices
 brew 'navi'         # Browse, search, read cheat sheets
-brew 'antigen'      # Plugin manager for zsh, inspired by oh-my-zsh and vundle
+brew 'zsh-autosuggestions'
+brew 'zsh-history-substring-search'
+brew 'zsh-syntax-highlighting'
 
 #############################################################
 # Software Development                                      #
@@ -57,7 +63,6 @@ brew 'node'           # Node.js
 brew 'openjdk'        # Java development kit
 brew 'dotnet'         # .NET Core
 brew "rustup"         # Rust toolchain installer
-cask 'temurin'        # JDK from the Eclipse Foundation (Adoptium)
 
 # Development Utils
 brew 'tig'            # Text-mode interface for git

@@ -1,0 +1,7 @@
+# Zsh compiled files
+*.zwc
+.zcompdump*
+
+# Machine-local overrides
+local.zsh
+
