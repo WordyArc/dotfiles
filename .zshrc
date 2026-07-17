@@ -35,3 +35,4 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 eval "$(starship init zsh)"
 # source "$XDG_CONFIG_HOME/zsh/oh-my-zsh.zsh"
+
