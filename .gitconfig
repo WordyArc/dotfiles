@@ -1,0 +1,16 @@
+[init]
+  defaultBranch = master
+
+[core]
+	autocrlf = input
+
+[user]
+	name = Viktor Kogai
+	email = ashenarx@gmail.com
+
+
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
