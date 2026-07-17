@@ -10,7 +10,6 @@ export VISUAL="${VISUAL:-$EDITOR}"
 # export STARSHIP_CONFIG="${STARSHIP_CONFIG:-$XDG_CONFIG_HOME/zsh/starship.toml}"
 
 typeset -U path PATH
-
 path=("$HOME/.local/bin" $path)
 
 export PATH

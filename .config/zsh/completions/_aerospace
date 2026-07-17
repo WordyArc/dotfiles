@@ -1,0 +1,426 @@
+#compdef aerospace
+
+_aerospace_cmd_52 () {
+    aerospace list-workspaces --monitor all --empty no
+}
+
+_aerospace_cmd_65 () {
+    true
+}
+
+_aerospace_cmd_31 () {
+    aerospace list-apps --format '%{app-pid}%{tab}%{app-name}'
+}
+
+_aerospace_cmd_38 () {
+    aerospace config --get mode --keys | xargs -I{} aerospace config --get mode.{}.binding --keys
+}
+
+_aerospace_cmd_64 () {
+    aerospace list-windows --all --format '%{window-id}%{tab}%{app-name} - %{window-title}'
+}
+
+_aerospace_cmd_21 () {
+    aerospace config --major-keys
+}
+
+_aerospace_cmd_45 () {
+    aerospace config --get mode --keys
+}
+
+_aerospace_cmd_19 () {
+    aerospace list-apps --format '%{app-bundle-id}%{tab}%{app-name}'
+}
+
+_aerospace_cmd_47 () {
+    aerospace list-monitors --format '%{monitor-id}%{tab}%{monitor-name}'
+}
+
+_aerospace_subword_cmd_0 () {
+    true
+}
+
+_aerospace_subword_1 () {
+    local mode=$1
+    local word=$2
+    local completions_no_description_trailing_space_array_name=$3
+    local completions_trailing_space_array_name=$4
+    local suffixes_trailing_space_array_name=$5
+    local descriptions_trailing_space_array_name=$6
+    local completions_no_description_no_trailing_space_array_name=$7
+    local completions_no_trailing_space_array_name=$8
+    local suffixes_no_trailing_space_array_name=$9
+    local descriptions_no_trailing_space_array_name=${10}
+
+    local -a literals=("-" "+")
+
+    local -A descriptions
+
+    local -A literal_transitions
+    literal_transitions[1]="([1]=2 [2]=2)"
+
+    local -A match_anything_transitions
+    match_anything_transitions=([1]=3 [2]=3)
+
+    local state=1
+    local char_index=0
+    local matched=0
+    while true; do
+        if [[ $char_index -ge ${#word} ]]; then
+            matched=1
+            break
+        fi
+
+        local subword=${word:$char_index}
+
+        if [[ -v "literal_transitions[$state]" ]]; then
+            declare -A state_transitions
+            eval "state_transitions=${literal_transitions[$state]}"
+
+            local literal_matched=0
+            for ((literal_id = 1; literal_id <= $#literals; literal_id++)); do
+                local literal=${literals[$literal_id]}
+                local literal_len=${#literal}
+                if [[ ${subword:0:$literal_len} = "$literal" ]]; then
+                    if [[ -v "state_transitions[$literal_id]" ]]; then
+                        state=${state_transitions[$literal_id]}
+                        char_index=$((char_index + literal_len))
+                        literal_matched=1
+                    fi
+                fi
+            done
+            if [[ $literal_matched -ne 0 ]]; then
+                continue
+            fi
+        fi
+
+        if [[ -v "match_anything_transitions[$state]" ]]; then
+            state=${match_anything_transitions[$state]}
+            matched=1
+            break
+        fi
+
+        break
+    done
+
+    if [[ $mode = matches ]]; then
+        return $((1 - matched))
+    fi
+
+    local matched_prefix="${word:0:$char_index}"
+    local completed_prefix="${word:$char_index}"
+
+    if [[ -v "literal_transitions[$state]" ]]; then
+        declare -A state_transitions
+        eval "state_transitions=${literal_transitions[$state]}"
+
+        for literal_id in ${(k)state_transitions}; do
+            local literal=${literals[$literal_id]}
+            if [[ $literal = "${completed_prefix}"* ]]; then
+                local completion="$matched_prefix$literal"
+                local to_state=${state_transitions[$literal_id]}
+                if [[ -v "literal_transitions[$to_state]" || -v "match_anything_transitions[$to_state]" ]]; then
+                    if [[ -v "descriptions[$literal_id]" ]]; then
+                        eval "$completions_no_trailing_space_array_name+=(${(qq)completion})"
+                        eval "$suffixes_no_trailing_space_array_name+=(${(qq)completion})"
+                        eval "$descriptions_no_trailing_space_array_name+=(${(qq)descriptions[$literal_id]})"
+                    else
+                        eval "$completions_no_trailing_space_array_name+=(${(qq)completion})"
+                        eval "$suffixes_no_trailing_space_array_name+=(${(qq)literal})"
+                        eval "$descriptions_no_trailing_space_array_name+=('')"
+                    fi
+                else
+                    if [[ -v "descriptions[$literal_id]" ]]; then
+                        eval "$completions_trailing_space_array_name+=(${(qq)completion})"
+                        eval "$suffixes_trailing_space_array_name+=(${(qq)completion})"
+                        eval "$descriptions_trailing_space_array_name+=(${(qq)descriptions[$literal_id]})"
+                    else
+                        eval "$completions_trailing_space_array_name+=(${(qq)completion})"
+                        eval "$suffixes_trailing_space_array_name+=(${(qq)literal})"
+                        eval "$descriptions_trailing_space_array_name+=('')"
+                    fi
+                fi
+            fi
+        done
+    fi
+    local -A commands=([1]=0 [2]=0)
+
+    if [[ -v "commands[$state]" ]]; then
+        local command_id=${commands[$state]}
+        local output=$(_aerospace_subword_cmd_${command_id} "$matched_prefix")
+        local -a command_completions=("${(@f)output}")
+        for line in ${command_completions[@]}; do
+            if [[ $line = "${completed_prefix}"* ]]; then
+                local parts=(${(@s:	:)line})
+                if [[ -v "parts[2]" ]]; then
+                    local completion=$matched_prefix${parts[1]}
+                    eval "$completions_trailing_space_array_name+=(${(qq)completion})"
+                    eval "$suffixes_trailing_space_array_name+=(${(qq)parts[1]})"
+                    eval "$descriptions_trailing_space_array_name+=(${(qq)parts[2]})"
+                else
+                    line="$matched_prefix$line"
+                    eval "$completions_no_description_trailing_space_array_name+=(${(qq)line})"
+                fi
+            fi
+        done
+    fi
+    return 0
+}
+
+_aerospace () {
+    local -a literals=("move-mouse" "--count" "mode-changed" "-v" "smart" "macos-native-fullscreen" "mute-toggle" "height" "toggle" "all-monitors-outer-frame" "h_accordion" "--stdin" "all" "--window-id" "monitor-force-center" "list-apps" "--fail-if-fullscreen" "flatten-workspace-tree" "mode" "width" "summon-workspace" "focus-back-and-forth" "list-monitors" "h_tiles" "prev" "window-force-center" "trigger-binding" "-h" "move-node-to-workspace" "wrap-around-the-workspace" "enable" "focused-monitor-changed" "=" "--ignore-floating" "--visible" "close-all-windows-but-current" "--fail-if-macos-native-fullscreen" "--help" "--macos-native-hidden" "test-not" "--stderr" "off" "move-workspace-to-monitor" "--no-send-initial" "--boundaries" "set" "workspace-back-and-forth" "on-focused-monitor-changed" "--quit-if-last-window" "window-lazy-center" "workspace" "--major-keys" "accordion" "--focused" "tiling" "run-callback" "--app-bundle-id" "--mouse" "balance-sizes" "opposite" "on" "--auto-back-and-forth" "--version" "test" "--json" "join-with" "reload-config" "--workspace" "floating" "--swap-focus" "--root" "--mode" "--boundaries-action" "resize" "~=" "visible" "close" "false" "--no-stdin" "up" "layout" "--fail-if-noop" "list-exec-env-vars" "fail" "on-window-detected" "--focus-follows-window" "split" "--monitor" "--pid" "true" "mute-on" "eval" "v_tiles" "--keys" "monitor-lazy-center" "wrap-around-all-monitors" "--wrap-around" "subscribe" "--for-every-window" "config" "horizontal" "create-implicit-container" "--no-outer-gaps" "focused" "mute-off" "--all-keys" "--all" "left" "right" "on-focus-changed" "swap" "--config-path" "binding-triggered" "--get" "--empty" "tiles" "dfs-next" "--no-gui" "smart-opposite" "--format" "list-modes" "focus-changed" "--dry-run" "window-detected" "move-node-to-monitor" "--window" "dfs-prev" "move" "focus" "down" "list-workspaces" "volume" "no" "stop" "debug-windows" "macos-native-minimize" "list-windows" "mouse" "next" "--dfs-index" "echo" "fullscreen" "focus-monitor" "focused-workspace-changed" "--current" "--" "vertical" "v_accordion")
+
+    local -A descriptions
+
+    local -A literal_transitions
+    literal_transitions[1]="([1]=119 [4]=18 [66]=69 [67]=129 [43]=106 [6]=64 [47]=18 [74]=130 [111]=95 [77]=14 [78]=18 [121]=99 [16]=38 [51]=131 [81]=42 [83]=18 [18]=2 [125]=114 [19]=40 [23]=36 [87]=123 [22]=18 [90]=18 [128]=21 [21]=125 [27]=51 [28]=18 [92]=132 [29]=133 [56]=134 [129]=22 [131]=135 [132]=80 [31]=136 [98]=101 [135]=32 [136]=32 [137]=126 [59]=2 [100]=70 [141]=16 [36]=79 [63]=18 [142]=89 [38]=18 [64]=137 [143]=138 [40]=137)"
+    literal_transitions[2]="([68]=3)"
+    literal_transitions[4]="([84]=5 [102]=5 [134]=5)"
+    literal_transitions[5]="([45]=115 [17]=5 [37]=5 [73]=4 [14]=128)"
+    literal_transitions[7]="([89]=109 [2]=7 [57]=6 [68]=10 [65]=7 [88]=111 [120]=110)"
+    literal_transitions[9]="([103]=9 [82]=144 [14]=8 [61]=73)"
+    literal_transitions[10]="([76]=11 [104]=11)"
+    literal_transitions[11]="([89]=109 [2]=7 [76]=11 [68]=10 [120]=110 [57]=6 [65]=7 [104]=11 [88]=111)"
+    literal_transitions[13]="([108]=18 [109]=18 [130]=18 [80]=18)"
+    literal_transitions[14]="([14]=15 [49]=14)"
+    literal_transitions[16]="([41]=16 [126]=17 [146]=18)"
+    literal_transitions[19]="([97]=18)"
+    literal_transitions[21]="([14]=20 [130]=5 [80]=5 [45]=96 [17]=21 [37]=21 [73]=97 [108]=5 [109]=5)"
+    literal_transitions[22]="([97]=27 [127]=26 [130]=23 [14]=25 [34]=27 [80]=23 [45]=28 [140]=24 [117]=26 [17]=29 [37]=29 [73]=30 [108]=23 [109]=23)"
+    literal_transitions[23]="([45]=122 [17]=23 [37]=23 [73]=105 [34]=23 [97]=23)"
+    literal_transitions[26]="([73]=47 [34]=26 [97]=26)"
+    literal_transitions[27]="([130]=23 [117]=26 [34]=27 [80]=23 [45]=28 [17]=29 [37]=29 [73]=30 [108]=23 [109]=23 [97]=27 [127]=26)"
+    literal_transitions[28]="([10]=29 [51]=29)"
+    literal_transitions[29]="([130]=23 [34]=29 [80]=23 [45]=28 [17]=29 [37]=29 [73]=31 [108]=23 [109]=23 [97]=29)"
+    literal_transitions[30]="([134]=27 [30]=27 [84]=27 [96]=27)"
+    literal_transitions[31]="([134]=29 [30]=29 [84]=29 [96]=29)"
+    literal_transitions[32]="([14]=25)"
+    literal_transitions[34]="([82]=18)"
+    literal_transitions[36]="([2]=36 [120]=35 [65]=36 [58]=76 [54]=76)"
+    literal_transitions[38]="([2]=38 [120]=37 [65]=38 [39]=78)"
+    literal_transitions[39]="([72]=40)"
+    literal_transitions[42]="([11]=60 [147]=60 [68]=41 [69]=60 [14]=77 [71]=42 [24]=60 [55]=60 [93]=60 [82]=42 [53]=60 [148]=60 [101]=60 [116]=60)"
+    literal_transitions[43]="([13]=43 [2]=44 [138]=43 [115]=45 [120]=46 [35]=45 [65]=44 [104]=43)"
+    literal_transitions[44]="([35]=45 [2]=44 [115]=45 [120]=46 [65]=44)"
+    literal_transitions[45]="([35]=45 [2]=44 [133]=44 [115]=45 [120]=46 [65]=44)"
+    literal_transitions[47]="([134]=26 [30]=26 [84]=26 [96]=26)"
+    literal_transitions[48]="([97]=18)"
+    literal_transitions[49]="([65]=49 [94]=49)"
+    literal_transitions[51]="([72]=52)"
+    literal_transitions[53]="([108]=48 [109]=48 [130]=48 [25]=48 [139]=48 [80]=48)"
+    literal_transitions[54]="([20]=55 [5]=55 [8]=55 [119]=55)"
+    literal_transitions[57]="([3]=57 [44]=18 [107]=18 [122]=57 [124]=57 [144]=57 [32]=57 [113]=57)"
+    literal_transitions[58]="([14]=59 [99]=58)"
+    literal_transitions[60]="([11]=60 [147]=60 [68]=62 [69]=60 [14]=61 [71]=63 [24]=60 [55]=60 [93]=60 [82]=63 [53]=60 [148]=60 [101]=60 [116]=60)"
+    literal_transitions[63]="([82]=63 [14]=61 [68]=62 [71]=63)"
+    literal_transitions[64]="([82]=64 [14]=65 [42]=66 [61]=66)"
+    literal_transitions[66]="([14]=100 [82]=66)"
+    literal_transitions[68]="([82]=68 [14]=67 [97]=68 [86]=68)"
+    literal_transitions[69]="([108]=18 [109]=18 [14]=12 [130]=18 [80]=18)"
+    literal_transitions[70]="([106]=18 [52]=18 [94]=71 [65]=71 [114]=56 [112]=18)"
+    literal_transitions[71]="([65]=71 [114]=56 [94]=71)"
+    literal_transitions[73]="([14]=72 [103]=73 [82]=73)"
+    literal_transitions[75]="([14]=74 [99]=75 [85]=58)"
+    literal_transitions[76]="([133]=36 [2]=36 [120]=35 [65]=36 [58]=76 [54]=76)"
+    literal_transitions[78]="([133]=38 [2]=38 [120]=37 [65]=38 [39]=78)"
+    literal_transitions[79]="([49]=18)"
+    literal_transitions[80]="([118]=83 [46]=82 [80]=81 [130]=81 [7]=81 [91]=81 [105]=81)"
+    literal_transitions[81]="([118]=18)"
+    literal_transitions[83]="([80]=81 [46]=82 [7]=81 [91]=81 [130]=81 [105]=81)"
+    literal_transitions[85]="([14]=84 [82]=85 [86]=85)"
+    literal_transitions[86]="([12]=86 [139]=87 [79]=86 [25]=87 [97]=86 [86]=86)"
+    literal_transitions[87]="([12]=87 [79]=87 [97]=87 [86]=87)"
+    literal_transitions[89]="([103]=9 [82]=143 [14]=88 [42]=66 [61]=73)"
+    literal_transitions[91]="([35]=147 [2]=91 [115]=147 [120]=90 [65]=91 [88]=116)"
+    literal_transitions[92]="([120]=93 [2]=92 [65]=92)"
+    literal_transitions[95]="([130]=140 [14]=94 [117]=140 [70]=95 [80]=140 [108]=140 [109]=140 [97]=95 [127]=140)"
+    literal_transitions[96]="([10]=21 [51]=21)"
+    literal_transitions[97]="([84]=21 [102]=21 [134]=21)"
+    literal_transitions[98]="([62]=98 [82]=98)"
+    literal_transitions[99]="([145]=99 [2]=99 [65]=99)"
+    literal_transitions[101]="([3]=57 [44]=102 [107]=102 [122]=57 [124]=57 [144]=57 [32]=57 [113]=57)"
+    literal_transitions[102]="([3]=57 [122]=57 [124]=57 [144]=57 [32]=57 [113]=57)"
+    literal_transitions[103]="([12]=103 [139]=104 [79]=103 [25]=104 [97]=103)"
+    literal_transitions[104]="([79]=104 [97]=104 [12]=104)"
+    literal_transitions[105]="([134]=23 [30]=23 [84]=23 [96]=23)"
+    literal_transitions[106]="([139]=48 [130]=48 [25]=48 [80]=48 [108]=48 [109]=48 [97]=53)"
+    literal_transitions[107]="([82]=107 [14]=108 [86]=107)"
+    literal_transitions[111]="([13]=149 [138]=149 [104]=149)"
+    literal_transitions[112]="([42]=34 [61]=34)"
+    literal_transitions[114]="([139]=68 [14]=113 [25]=68 [130]=68 [80]=68 [108]=68 [109]=68 [82]=114 [97]=117 [86]=114)"
+    literal_transitions[115]="([10]=5 [51]=5)"
+    literal_transitions[116]="([13]=43 [138]=43 [104]=43)"
+    literal_transitions[117]="([139]=68 [14]=118 [25]=68 [130]=68 [80]=68 [108]=68 [109]=68 [82]=117 [97]=117 [86]=117)"
+    literal_transitions[119]="([82]=120 [50]=34 [15]=34 [26]=34 [95]=34)"
+    literal_transitions[120]="([95]=34 [50]=34 [15]=34 [26]=34)"
+    literal_transitions[122]="([10]=23 [51]=23)"
+    literal_transitions[123]="([60]=32 [14]=124 [101]=32 [147]=32)"
+    literal_transitions[125]="([82]=33)"
+    literal_transitions[126]="([89]=109 [2]=126 [68]=10 [120]=127 [54]=92 [107]=92 [57]=6 [65]=126 [88]=111)"
+    literal_transitions[129]="([118]=129 [123]=129)"
+    literal_transitions[130]="([20]=55 [5]=55 [8]=55 [14]=152 [119]=55)"
+    literal_transitions[131]="([12]=103 [139]=104 [79]=103 [25]=104 [62]=153 [82]=153 [97]=103)"
+    literal_transitions[132]="([12]=18)"
+    literal_transitions[133]="([12]=86 [79]=86 [14]=108 [25]=87 [139]=87 [82]=107 [97]=86 [86]=133)"
+    literal_transitions[134]="([99]=75 [14]=74 [110]=18 [48]=18 [85]=58)"
+    literal_transitions[135]="([2]=135 [115]=147 [120]=141 [54]=92 [35]=147 [107]=92 [65]=135 [88]=116)"
+    literal_transitions[136]="([82]=112 [42]=34 [9]=18 [61]=34)"
+    literal_transitions[138]="([139]=48 [130]=48 [25]=48 [80]=48 [108]=48 [109]=48 [97]=142)"
+    literal_transitions[140]="([14]=139 [70]=140 [97]=140)"
+    literal_transitions[142]="([108]=48 [109]=48 [139]=48 [130]=48 [25]=48 [80]=48)"
+    literal_transitions[143]="([103]=144 [82]=143 [14]=146 [42]=66 [61]=73)"
+    literal_transitions[144]="([103]=144 [82]=144 [14]=151 [61]=73)"
+    literal_transitions[145]="([101]=32 [147]=32 [60]=32)"
+    literal_transitions[147]="([35]=147 [2]=91 [133]=91 [115]=147 [120]=90 [65]=91 [88]=116)"
+    literal_transitions[148]="([82]=85 [14]=84 [86]=85)"
+    literal_transitions[149]="([13]=149 [2]=7 [89]=109 [138]=149 [68]=10 [120]=110 [104]=149 [57]=6 [65]=7 [88]=111)"
+    literal_transitions[150]="([75]=24 [33]=24)"
+    literal_transitions[153]="([62]=153 [82]=153)"
+
+    local -A match_anything_transitions
+    match_anything_transitions=([24]=18 [40]=18 [131]=98 [37]=38 [128]=5 [125]=34 [127]=126 [146]=143 [88]=89 [133]=85 [11]=11 [46]=44 [106]=19 [82]=81 [10]=11 [43]=43 [25]=18 [153]=98 [65]=64 [6]=7 [20]=21 [56]=49 [94]=95 [114]=148 [33]=34 [111]=149 [108]=107 [139]=140 [118]=117 [152]=54 [50]=18 [109]=7 [53]=19 [3]=18 [61]=63 [138]=121 [124]=145 [137]=150 [51]=39 [77]=42 [116]=43 [59]=58 [67]=68 [41]=42 [72]=73 [52]=50 [93]=92 [149]=149 [100]=66 [151]=144 [19]=19 [107]=85 [62]=63 [84]=85 [113]=114 [121]=121 [15]=14 [74]=75 [8]=9 [90]=91 [35]=36 [110]=7 [12]=13 [148]=148 [17]=16 [141]=135)
+
+    declare -A subword_transitions
+    subword_transitions[55]="([1]=32)"
+
+    local state=1
+    local word_index=2
+    while [[ $word_index -lt $CURRENT ]]; do
+        if [[ -v "literal_transitions[$state]" ]]; then
+            local -A state_transitions
+            eval "state_transitions=${literal_transitions[$state]}"
+
+            local word=${words[$word_index]}
+            local word_matched=0
+            for ((literal_id = 1; literal_id <= $#literals; literal_id++)); do
+                if [[ ${literals[$literal_id]} = "$word" ]]; then
+                    if [[ -v "state_transitions[$literal_id]" ]]; then
+                        state=${state_transitions[$literal_id]}
+                        word_index=$((word_index + 1))
+                        word_matched=1
+                        break
+                    fi
+                fi
+            done
+            if [[ $word_matched -ne 0 ]]; then
+                continue
+            fi
+        fi
+
+        if [[ -v "subword_transitions[$state]" ]]; then
+            declare -A state_transitions
+            eval "state_transitions=${subword_transitions[$state]}"
+
+            local subword_matched=0
+            for subword_id in ${(k)state_transitions}; do
+                if _aerospace_subword_"${subword_id}" matches "$word"; then
+                    subword_matched=1
+                    state=${state_transitions[$subword_id]}
+                    word_index=$((word_index + 1))
+                    break
+                fi
+            done
+            if [[ $subword_matched -ne 0 ]]; then
+                continue
+            fi
+        fi
+
+        if [[ -v "match_anything_transitions[$state]" ]]; then
+            state=${match_anything_transitions[$state]}
+            word_index=$((word_index + 1))
+            continue
+        fi
+
+        return 1
+    done
+
+    completions_no_description_trailing_space=()
+    completions_no_description_no_trailing_space=()
+    completions_trailing_space=()
+    suffixes_trailing_space=()
+    descriptions_trailing_space=()
+    completions_no_trailing_space=()
+    suffixes_no_trailing_space=()
+    descriptions_no_trailing_space=()
+
+    if [[ -v "literal_transitions[$state]" ]]; then
+        local -A state_transitions
+        eval "state_transitions=${literal_transitions[$state]}"
+
+        for literal_id in ${(k)state_transitions}; do
+            if [[ -v "descriptions[$literal_id]" ]]; then
+                completions_trailing_space+=("${literals[$literal_id]}")
+                suffixes_trailing_space+=("${literals[$literal_id]}")
+                descriptions_trailing_space+=("${descriptions[$literal_id]}")
+            else
+                completions_no_description_trailing_space+=("${literals[$literal_id]}")
+            fi
+        done
+    fi
+
+    if [[ -v "subword_transitions[$state]" ]]; then
+        declare -A state_transitions
+        eval "state_transitions=${subword_transitions[$state]}"
+
+        for subword_id in ${(k)state_transitions}; do
+            _aerospace_subword_${subword_id} complete "${words[$CURRENT]}" completions_no_description_trailing_space completions_trailing_space suffixes_trailing_space descriptions_trailing_space completions_no_description_no_trailing_space completions_no_trailing_space suffixes_no_trailing_space descriptions_no_trailing_space
+        done
+    fi
+    local -A commands=([50]=38 [24]=65 [40]=45 [109]=31 [53]=65 [3]=52 [124]=64 [61]=64 [138]=65 [137]=65 [131]=52 [37]=65 [51]=38 [128]=64 [77]=64 [125]=52 [127]=65 [146]=64 [116]=47 [88]=64 [59]=64 [67]=64 [72]=64 [41]=52 [133]=52 [11]=52 [52]=45 [46]=65 [106]=65 [93]=65 [149]=47 [100]=64 [151]=64 [62]=52 [19]=65 [107]=52 [84]=64 [82]=65 [10]=52 [43]=47 [25]=64 [113]=64 [121]=65 [15]=64 [74]=64 [153]=52 [90]=65 [8]=64 [65]=64 [35]=65 [6]=19 [20]=64 [56]=21 [94]=64 [114]=65 [110]=65 [33]=52 [111]=47 [12]=64 [108]=64 [148]=65 [152]=64 [17]=64 [139]=64 [118]=64 [141]=65)
+
+    if [[ -v "commands[$state]" ]]; then
+        local command_id=${commands[$state]}
+        local output=$(_aerospace_cmd_${command_id} "${words[$CURRENT]}")
+        local -a command_completions=("${(@f)output}")
+        for line in ${command_completions[@]}; do
+            local parts=(${(@s:	:)line})
+            if [[ -v "parts[2]" ]]; then
+                completions_trailing_space+=("${parts[1]}")
+                suffixes_trailing_space+=("${parts[1]}")
+                descriptions_trailing_space+=("${parts[2]}")
+            else
+                completions_no_description_trailing_space+=("${parts[1]}")
+            fi
+        done
+    fi
+
+    local maxlen=0
+    for suffix in ${suffixes_trailing_space[@]}; do
+        if [[ ${#suffix} -gt $maxlen ]]; then
+            maxlen=${#suffix}
+        fi
+    done
+    for suffix in ${suffixes_no_trailing_space[@]}; do
+        if [[ ${#suffix} -gt $maxlen ]]; then
+            maxlen=${#suffix}
+        fi
+    done
+
+    for ((i = 1; i <= $#suffixes_trailing_space; i++)); do
+        if [[ -z ${descriptions_trailing_space[$i]} ]]; then
+            descriptions_trailing_space[$i]="${(r($maxlen)( ))${suffixes_trailing_space[$i]}}"
+        else
+            descriptions_trailing_space[$i]="${(r($maxlen)( ))${suffixes_trailing_space[$i]}} -- ${descriptions_trailing_space[$i]}"
+        fi
+    done
+
+    for ((i = 1; i <= $#suffixes_no_trailing_space; i++)); do
+        if [[ -z ${descriptions_no_trailing_space[$i]} ]]; then
+            descriptions_no_trailing_space[$i]="${(r($maxlen)( ))${suffixes_no_trailing_space[$i]}}"
+        else
+            descriptions_no_trailing_space[$i]="${(r($maxlen)( ))${suffixes_no_trailing_space[$i]}} -- ${descriptions_no_trailing_space[$i]}"
+        fi
+    done
+
+    compadd -Q -a completions_no_description_trailing_space
+    compadd -Q -S ' ' -a completions_no_description_no_trailing_space
+    compadd -l -Q -a -d descriptions_trailing_space completions_trailing_space
+    compadd -l -Q -S '' -a -d descriptions_no_trailing_space completions_no_trailing_space
+    return 0
+}
+
+if [[ $ZSH_EVAL_CONTEXT =~ :file$ ]]; then
+    compdef _aerospace aerospace
+else
+    _aerospace
+fi
