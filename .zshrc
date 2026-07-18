@@ -31,6 +31,8 @@ bindkey -e
 bindkey '^[[1;5C' forward-word
 bindkey '^[[1;5D' backward-word
 
+source "$XDG_CONFIG_HOME/zsh/oh-my-zsh.zsh"
+
 source "$XDG_CONFIG_HOME/zsh/integrations.zsh"
 source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
 source "$XDG_CONFIG_HOME/zsh/functions.zsh"
@@ -39,4 +41,4 @@ source "$XDG_CONFIG_HOME/zsh/local.zsh"
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 eval "$(starship init zsh)"
-source "$XDG_CONFIG_HOME/zsh/oh-my-zsh.zsh"
+
