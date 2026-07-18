@@ -30,6 +30,7 @@ brew 'starship'     # Shell prompt
 brew 'tree'         # Directory listings as tree structure
 brew 'midnight-commander' # Terminal-based visual file manager
 brew 'zoxide'       # Smarter directory navigation
+brew 'fzf'          # Fuzzy finder
 
 # CLI Monitoring and Performance Apps
 brew 'ctop'         # Container metrics and monitoring
