@@ -16,7 +16,11 @@ setopt NOBEEP
 setopt NUMERIC_GLOB_SORT
 
 typeset -U path PATH fpath FPATH
-fpath=("$XDG_CONFIG_HOME/zsh/completions" "$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
+fpath=(
+  "$XDG_CONFIG_HOME/zsh/completions"
+  "$HOMEBREW_PREFIX/share/zsh/site-functions"
+  $fpath
+)
 
 autoload -Uz compinit
 compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
