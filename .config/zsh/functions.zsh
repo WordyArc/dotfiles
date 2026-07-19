@@ -26,6 +26,28 @@ catroll() {
   done
 }
 
+copy_xdg_dir() {
+  local src="$1"
+  local dst="$2"
+
+  if [[ ! -d "$src" ]]; then
+    print "Пропуск: $src не существует"
+    return 0
+  fi
+
+  if [[ -e "$dst" ]]; then
+    print -u2 "Остановка: назначение уже существует: $dst"
+    return 1
+  fi
+
+  mkdir -p "${dst:h}"
+  rsync -a "$src/" "$dst/"
+
+  print "Скопировано:"
+  print "  $src"
+  print "  -> $dst"
+}
+
 pubkey() {
   pbcopy < "${1:-$HOME/.ssh/id_ed25519.pub}" || return
   print 'Public key copied to pasteboard.'

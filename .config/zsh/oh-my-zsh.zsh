@@ -1,13 +1,17 @@
 export ZSH="$HOME/.config/.oh-my-zsh"
 
-# ZSH_THEME="robbyrussell"
-ZSH_THEME=""
+ZSH_THEME="robbyrussell"
 
 CASE_SENSITIVE="false"
 HYPHEN_INSENSITIVE="false"
 HIST_STAMPS="yyyy-mm-dd"
 
-plugins=(git)
+plugins=(
+  aliases
+  git
+  dotenv
+  tmux
+)
 
 export ZSH_CACHE_DIR="$XDG_CACHE_HOME/oh-my-zsh"
 export ZSH_COMPDUMP="$ZSH_CACHE_DIR/.zcompdump-$ZSH_VERSION"
