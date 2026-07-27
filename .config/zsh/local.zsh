@@ -1,5 +1,7 @@
 # Toolchain environment
 
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 export DOTNET_ROOT="$HOMEBREW_PREFIX/opt/dotnet/libexec"
 export VCPKG_ROOT="$HOME/develop/vcpkg"
 
