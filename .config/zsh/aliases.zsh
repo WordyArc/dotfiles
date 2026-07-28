@@ -11,5 +11,3 @@ alias mc='SHELL=/bin/bash mc'
 alias glog='PAGER="less -F -X" git log'
 alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 
-alias envp='env | LC_ALL=C sort | bat --plain --language=ini --paging=never'
-

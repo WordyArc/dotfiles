@@ -58,6 +58,12 @@ shrug() {
   print 'Copied to pasteboard.'
 }
 
+envp() {
+  env |
+    LC_ALL=C sort |
+    bat --plain --language=ini --paging=never
+}
+
 lenvp() {
   launchctl print "gui/$(id -u)" 2>/dev/null |
     awk '
