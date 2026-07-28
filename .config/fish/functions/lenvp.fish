@@ -1,6 +1,7 @@
 function lenvp --description 'Print the launchd environment'
-    launchctl print "gui/"(id -u) 2>/dev/null |
-        awk '
+    set -l environment (
+        launchctl print "gui/"(id -u) 2>/dev/null |
+            awk '
           /^[[:space:]]*environment = \{$/ {
             inside = 1
             next
@@ -20,7 +21,16 @@ function lenvp --description 'Print the launchd environment'
               print key "=" value
             }
           }
-        ' |
+        '
+    )
+
+    if set -q argv[1]
+        set -l patterns (string escape --style=regex -- $argv)
+        set -l pattern (string join '|' -- $patterns)
+        set environment (string match --entire --ignore-case --regex -- $pattern $environment)
+    end
+
+    string join \n -- $environment |
         LC_ALL=C sort |
         bat --plain --language=ini --paging=never
 end
