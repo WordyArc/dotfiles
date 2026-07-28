@@ -18,6 +18,7 @@ tap 'homebrew/services'
 #############################################################
 
 # CLI Essentials
+brew 'fish'         # Interactive shell
 brew 'git'          # Version controll
 
 # CLI Basics
