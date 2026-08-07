@@ -11,3 +11,5 @@ alias mc='SHELL=/bin/bash mc'
 alias glog='PAGER="less -F -X" git log'
 alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 
+alias dclean='docker ps -q | xargs -r docker stop && docker container prune -f && docker volume prune -af'
+
